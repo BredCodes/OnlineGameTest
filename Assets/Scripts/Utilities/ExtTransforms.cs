@@ -2,8 +2,7 @@ using UnityEngine;
 
 public static class Transforms
 {
-
-    public static void DestroyChilderen(this Transform t, bool destroyImmediately = false)
+    public static void DestroyChildren(this Transform t, bool destroyImmediately = false)
     {
         foreach(Transform child in t)
         {
@@ -17,5 +16,4 @@ public static class Transforms
             }
         }
     }
-
 }

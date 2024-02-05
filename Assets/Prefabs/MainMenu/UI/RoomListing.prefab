@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2669495447956301627}
   - component: {fileID: 6293864763376984170}
   - component: {fileID: 1693391373153403727}
-  - component: {fileID: 7179665110677188773}
   - component: {fileID: 7108279982161109347}
+  - component: {fileID: -1905708865279380663}
   m_Layer: 0
   m_Name: RoomListing
   m_TagString: Untagged
@@ -96,19 +96,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &7179665110677188773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1930065979805752070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae26acb56d9a01c44b2d6678f916598f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 3248557656775228532}
 --- !u!114 &7108279982161109347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +140,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7179665110677188773}
+      - m_Target: {fileID: -1905708865279380663}
         m_TargetAssemblyTypeName: RoomListing, Assembly-CSharp
         m_MethodName: OnClick_Button
         m_Mode: 1
@@ -165,6 +152,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-1905708865279380663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930065979805752070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae26acb56d9a01c44b2d6678f916598f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 3248557656775228532}
 --- !u!1 &5453086522001233379
 GameObject:
   m_ObjectHideFlags: 0

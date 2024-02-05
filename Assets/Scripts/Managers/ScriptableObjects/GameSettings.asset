@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9721af19e4c1e8c47bcd943717f312c6, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  _gameVersion: 0.0.0
-  _nickName: Bred
+  _gameVersion: 0.0.1
+  _nickName: Punfish

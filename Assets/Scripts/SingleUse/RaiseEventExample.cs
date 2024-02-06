@@ -7,19 +7,20 @@ using UnityEngine;
 
 public class RaiseEventExample : MonoBehaviourPun
 {
-    private Material material;
+    [SerializeField]
+    private Renderer _renderer;
 
     private const byte COlOR_CHANGE_EVENT = 0;
 
     private void Awake()
     {
-        material = GetComponent<Material>();
+        _renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if(base.photonView.IsMine && Input.GetKey(KeyCode.Escape))
+        if(photonView.IsMine && Input.GetKey(KeyCode.Escape))
         {
             ChangeColor();
         }
@@ -28,11 +29,6 @@ public class RaiseEventExample : MonoBehaviourPun
     private void OnEnable()
     {
         PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
-    }
-
-    private void OnDisable()
-    {
-        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
     }
 
     private void NetworkingClient_EventReceived(EventData obj)
@@ -44,7 +40,9 @@ public class RaiseEventExample : MonoBehaviourPun
             float g = (float)data[1];
             float b = (float)data[2];
 
-            material.color = new Color(r, g, b, 1f);
+            Color customColor = new Color(r, g, b, 1f);
+
+            _renderer.material.SetColor("_Color", customColor);
         }
     }
 
@@ -54,7 +52,9 @@ public class RaiseEventExample : MonoBehaviourPun
         float g = Random.Range(0f, 1f);
         float b = Random.Range(0f, 1f);
 
-        material.color = new Color(r, g, b, 1f);
+        Color customColor = new Color(r, g, b, 1f);
+
+        _renderer.material.SetColor("_Color", customColor);
 
         object[] datas = new object[] { r, g, b };
 

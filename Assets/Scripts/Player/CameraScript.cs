@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,12 +14,23 @@ public class CameraScript : MonoBehaviour
 
     //rotation
     float xRotation = 0f;
+
+    //Zoom
+    private Camera mainCamera;
+    public float defaultFOV = 60f;
+    public float zoomFOV = 30f;
+    private bool isZoomed = false;
+
     // Start is called before the first frame update
     void Start()
     {
         //make cursor invisible and not move from the screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        //get the main camera component
+        mainCamera = Camera.main;
+        mainCamera.fieldOfView = defaultFOV; //Set default FOV
 
     }
 
@@ -34,5 +46,19 @@ public class CameraScript : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
+
+        //Zoom Input
+        if(Input.GetButtonDown("Fire2"))
+        {
+            ToggleZoom();
+        }
+    }
+
+    private void ToggleZoom()
+    {
+        isZoomed = !isZoomed;
+        
+        // Adjust FOV based on zoom state
+        mainCamera.fieldOfView = isZoomed ? zoomFOV : defaultFOV;
     }
 }

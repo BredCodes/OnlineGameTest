@@ -1,38 +1,57 @@
+using Photon.Pun;
 using UnityEngine;
 
-public class MovementScript1 : MonoBehaviour
+public class MovementScript1 : MonoBehaviourPun
 {
     [Header("Movement")]
-    public float moveSpeed;
     public float standardMoveSpeed = 7f;
-    public float sprintMoveSpeed;
+    public float sprintMoveSpeed = 10f;
     public float gravity = -9.81f;
-    public bool moving;
-
     public float jumpHeight = 3f;
 
-    Vector3 velocity;
+    private float moveSpeed;
+    private bool isSprinting = false;
 
-    public CharacterController controller;
+    Vector3 velocity;
+    private CharacterController controller;
 
     [Header("GroundCheck")]
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
-    public bool isGrounded;
-    
+    private bool isGrounded;
+
+    private CameraScript cameraController;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        moveSpeed = standardMoveSpeed;
+
+        // Check if the local player owns this GameObject
+        if (photonView.IsMine)
+        {
+            cameraController = GetComponentInChildren<CameraScript>();
+            if (cameraController != null)
+                cameraController.enabled = true;
+        }
+        else
+        {
+            enabled = false;
+            cameraController = GetComponentInChildren<CameraScript>();
+            if (cameraController != null)
+                cameraController.enabled = false;
+        }
     }
 
     // Update is called once per frame
     public void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (!photonView.IsMine)
+            return;
 
-        velocity.y += gravity * Time.deltaTime;
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
         {
@@ -45,38 +64,26 @@ public class MovementScript1 : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
 
         controller.Move(move * moveSpeed * Time.deltaTime);
-        Jump();
-        Sprint();
 
-        if(transform.hasChanged != true)
-        {
-            moving = false;
-        }
-        else
-        {
-            moving = true;
-        }
-    }
-
-    private void Jump()
-    {
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            velocity.y = Mathf.Sqrt(jumpHeight* -2f * gravity);
         }
-    }
 
-    private void Sprint()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded && moving)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded && !isSprinting)
         {
+            isSprinting = true;
             moveSpeed = sprintMoveSpeed;
-            Debug.Log("faster");
+            Debug.Log("Sprinting");
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || !isGrounded)
         {
+            isSprinting = false;
             moveSpeed = standardMoveSpeed;
-            Debug.Log("normal");
+            Debug.Log("Walking");
         }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }

@@ -8,21 +8,30 @@ using UnityEngine;
 public class RaiseEventExample : MonoBehaviourPun
 {
     [SerializeField]
-    private Renderer _renderer;
+    private Material _material;
 
     private const byte COlOR_CHANGE_EVENT = 0;
 
+    public Color customColor;
+
+    private Color _1color;
+    private Color _2color;
+
+    ShootBullets1 shoot;
+
     private void Awake()
     {
-        _renderer = GetComponent<Renderer>();
+        shoot = GameObject.Find("Player(Clone)").GetComponentInChildren<ShootBullets1>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if(photonView.IsMine && Input.GetKey(KeyCode.Escape))
+        if(photonView.IsMine && gameObject.tag == "Tagged")
         {
-            ChangeColor();
+            _1color = shoot._color1;
+            _2color = shoot._color2;
+            ChangeColor(_1color, _2color);
         }
     }
 
@@ -33,31 +42,34 @@ public class RaiseEventExample : MonoBehaviourPun
 
     private void NetworkingClient_EventReceived(EventData obj)
     {
-        if(obj.Code == COlOR_CHANGE_EVENT)
+        if (obj.Code == COlOR_CHANGE_EVENT && _material != null)
         {
             object[] data = (object[])obj.CustomData;
-            float r = (float)data[0];
-            float g = (float)data[1];
-            float b = (float)data[2];
+            float[] colorData = (float[])data[0];
+            Color customColor = new Color(colorData[0], colorData[1], colorData[2], colorData[3]);
 
-            Color customColor = new Color(r, g, b, 1f);
-
-            _renderer.material.SetColor("_Color", customColor);
+            _material.SetColor("_Color", customColor);
         }
     }
 
-    private void ChangeColor()
+    public void ChangeColor(Color color1, Color color2)
     {
-        float r = Random.Range(0f, 1f);
-        float g = Random.Range(0f, 1f);
-        float b = Random.Range(0f, 1f);
+        if (_material.color == color1)
+        {
+            customColor = color2;
+        }
+        else
+        {
+            customColor = color1;
+        }
 
-        Color customColor = new Color(r, g, b, 1f);
+        _material.SetColor("_Color", customColor);
 
-        _renderer.material.SetColor("_Color", customColor);
-
-        object[] datas = new object[] { r, g, b };
+        float[] colorData = new float[] { customColor.r, customColor.g, customColor.b, customColor.a };
+        object[] datas = new object[] { colorData };
 
         PhotonNetwork.RaiseEvent(COlOR_CHANGE_EVENT, datas, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+
+        gameObject.tag = "NotTagged";
     }
 }

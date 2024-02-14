@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - ActiveGun
+  - Tagged
+  - NotTagged
   layers:
   - Default
   - TransparentFX
